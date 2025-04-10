@@ -1,0 +1,959 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background-color: #f5f5f5;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.sidebar {
+  width: 40%;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.content {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.sidebar-header,
+.content-header {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f8f8;
+}
+
+h2 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#filter-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  min-width: 120px;
+}
+
+button {
+  padding: 6px 12px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e6e6e6;
+}
+
+#event-list {
+  overflow-y: auto;
+  flex: 1;
+  list-style: none;
+}
+
+.event-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.event-item:hover {
+  background-color: #f5f5f5;
+}
+
+.event-item.selected {
+  background-color: #e2f2ff;
+}
+
+.event-time {
+  color: #999;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+#event-detail {
+  padding: 0;
+  overflow: auto;
+  flex: 1;
+  font-family: monospace;
+  background-color: #fafafa;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder {
+  color: #999;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+#format-select {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.json-key {
+  color: #0451a5;
+}
+
+.json-value-string {
+  color: #a31515;
+}
+
+.json-value-number,
+.json-value-boolean,
+.json-value-null {
+  color: #098658;
+}
+
+.event-detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.event-meta {
+  padding: 12px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #eee;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.event-data {
+  padding: 12px;
+  overflow: auto;
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.event-item.empty {
+  font-style: italic;
+  color: #999;
+  cursor: default;
+}
+
+.event-meta strong {
+  font-weight: 500;
+  color: #555;
+}
+
+/* 请求分组样式 */
+.request-group {
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.request-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  user-select: none;
+}
+
+.request-header:hover {
+  background-color: #e9e9e9;
+}
+
+.collapse-icon {
+  margin-right: 8px;
+  width: 14px;
+  text-align: center;
+}
+
+.request-name {
+  flex: 1;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #333;
+}
+
+.request-count {
+  margin: 0 8px;
+  color: #666;
+  font-size: 12px;
+}
+
+.request-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.request-events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 分组切换开关 */
+.group-toggle-container {
+  display: flex;
+  align-items: center;
+  margin: 0 8px;
+  white-space: nowrap;
+}
+
+#group-toggle {
+  margin-right: 4px;
+}
+
+/* JSON交互样式 */
+.json-container {
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+.json-key {
+  color: #0451a5;
+}
+
+.json-string {
+  color: #a31515;
+}
+
+.json-number,
+.json-boolean {
+  color: #098658;
+}
+
+.json-null,
+.json-undefined {
+  color: #800080;
+}
+
+.json-bracket {
+  color: #000000;
+}
+
+.json-colon {
+  color: #000000;
+  margin-right: 2px; /* 原来是4px */
+}
+
+.json-preview {
+  color: #767676;
+  margin: 0 4px;
+}
+
+.expand-collapse {
+  color: #757575;
+  margin-right: 2px;
+  display: inline-block;
+  width: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.json-array-container,
+.json-object-container {
+  position: relative;
+}
+
+.json-array-header,
+.json-object-header {
+  cursor: pointer;
+}
+
+.json-array-content,
+.json-object-content {
+  padding-left: 16px;
+  border-left: 1px dotted #ddd;
+  margin-left: 4px;
+}
+
+.event-meta {
+  padding: 12px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #eee;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.event-data {
+  padding: 12px;
+  overflow: auto;
+  flex: 1;
+}
+
+/* --- JSON格式化和交互样式 --- */
+.event-data {
+  padding: 12px;
+  overflow: auto;
+  flex: 1;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+    Liberation Mono, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.json-container {
+  position: relative;
+}
+
+/* 原始数据类型样式 */
+.json-string {
+  color: #a31515;
+  word-break: break-word;
+}
+
+.json-number,
+.json-boolean {
+  color: #098658;
+}
+
+.json-null,
+.json-undefined {
+  color: #0000ff;
+}
+
+.json-key {
+  color: #0451a5;
+}
+
+.json-colon {
+  color: #000000;
+  margin-right: 2px; /* 原来是4px */
+}
+
+.json-punctuation {
+  display: inline;
+  color: #000000;
+  margin-left: 0;
+}
+
+.json-bracket {
+  color: #000000;
+}
+
+/* 确保键值对在同一行 */
+.json-property {
+  display: block; /* 改回block，避免flex导致的排版问题 */
+  padding: 1px 0;
+  position: relative;
+}
+
+/* 防止span包裹，影响逗号位置 */
+.json-string,
+.json-number,
+.json-boolean,
+.json-null,
+.json-undefined {
+  display: inline-block; /* 使用inline-block确保正确显示 */
+  vertical-align: top;
+}
+
+/* 可展开元素样式 */
+.json-array-wrapper,
+.json-object-wrapper {
+  position: relative;
+}
+
+.json-expandable {
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.json-toggle {
+  display: inline-block;
+  width: 10px; /* 原来是12px */
+  height: 10px; /* 原来是12px */
+  margin-right: 3px;
+  position: relative;
+  cursor: pointer;
+}
+
+.json-toggle::before {
+  content: "";
+  position: absolute;
+  top: 3px; /* 原来是4px */
+  left: 0px; /* 原来是1px */
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+/* 展开/折叠箭头图标 */
+.json-toggle.collapsed::before {
+  border-width: 4px 0 4px 6px;
+  border-color: transparent transparent transparent #808080;
+}
+
+.json-toggle.expanded::before {
+  top: 5px; /* 原来是6px */
+  left: -1px;
+  border-width: 6px 4px 0 4px;
+  border-color: #808080 transparent transparent transparent;
+}
+
+/* 内容区域 */
+.json-content {
+  display: block;
+  padding-left: 8px; /* 更小的缩进 */
+  margin-left: 2px;
+  position: relative;
+}
+
+.json-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px; /* 垂直线更靠近左侧 */
+  width: 1px;
+  background-color: #e0e0e0;
+}
+
+.json-footer {
+  margin-top: 2px;
+}
+
+/* 预览信息 */
+.json-preview {
+  color: #757575;
+  margin: 0 2px; /* 原来是4px */
+  opacity: 0.8;
+}
+
+/* 数组项和对象属性 */
+.json-array-item,
+.json-property {
+  padding: 1px 0; /* 原来是2px */
+  position: relative;
+}
+
+/* 空对象和数组 */
+.json-empty-object,
+.json-empty-array {
+  color: #000000;
+}
+
+/* 确保布局正确 */
+.json-expandable,
+.json-array-item,
+.json-property {
+  min-height: 18px;
+}
+
+/* 优化大型JSON对象滚动和空白处理 */
+.event-data {
+  overflow-x: auto;
+  overflow-y: auto;
+  white-space: pre;
+}
+
+.json-content .json-array-item:last-child,
+.json-content .json-property:last-child {
+  margin-bottom: 2px;
+}
+
+/* 确保按钮有足够的点击区域 */
+#copy-btn,
+#clear-btn {
+  padding: 6px 12px;
+  min-width: 60px;
+  cursor: pointer;
+}
+
+/* 复制按钮状态样式 */
+#copy-btn.copy-success {
+  background-color: #4caf50;
+  color: white;
+  border-color: #388e3c;
+}
+
+#copy-btn.copy-error {
+  background-color: #f44336;
+  color: white;
+  border-color: #d32f2f;
+}
+
+/* Toast通知样式 */
+.toast-notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  z-index: 10000;
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast-notification.success {
+  background-color: rgba(76, 175, 80, 0.9);
+}
+
+/* 确保所有内容可见 */
+.json-container * {
+  overflow: visible;
+}
+
+/* 修复空对象和数组的显示 */
+.json-empty-object,
+.json-empty-array {
+  color: #000000;
+  display: inline-block;
+}
+
+/* 修复值容器确保逗号在同一行 */
+.json-value-container {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+}
+
+/* 确保逗号紧跟值并且不换行 */
+.json-punctuation {
+  display: inline;
+  color: #000000;
+  margin-left: 2px; /* 添加少量左边距，使逗号与前面内容有适当间隔 */
+}
+
+/* 修复可能导致内容不显示的CSS */
+.json-property {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  padding: 1px 0;
+}
+
+/* 确保对象属性和数组项的内容布局正确 */
+.json-property,
+.json-array-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 1px 0;
+  position: relative;
+}
+
+/* 确保复杂对象(如嵌套对象/数组)正确显示 */
+.json-array-wrapper,
+.json-object-wrapper {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* 确保原始值正确显示 */
+.json-string,
+.json-number,
+.json-boolean,
+.json-null,
+.json-undefined {
+  display: inline;
+}
+
+/* 确保每个JSON属性行完整显示 */
+.json-content {
+  padding-left: 8px; /* 更小的缩进 */
+  margin-left: 2px;
+  position: relative;
+  display: block;
+}
+
+.json-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px; /* 垂直线更靠近左侧 */
+  width: 1px;
+  background-color: #e0e0e0;
+}
+
+/* 移除可能影响布局的值容器样式 */
+.json-value-container {
+  display: inline;
+}
+
+/* 确保所有内容正确显示 */
+.json-container * {
+  overflow: visible;
+}
+
+/* 处理逗号位置 */
+.json-comma {
+  color: #000000;
+  margin-left: 0;
+  display: inline;
+}
+
+/* 优化每行显示 */
+.json-line {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1px 0;
+  align-items: baseline;
+}
+
+/* 键的样式 */
+.json-key {
+  color: #0451a5;
+  margin-right: 0;
+}
+
+/* 冒号样式 */
+.json-colon {
+  color: #000000;
+  margin-right: 4px;
+}
+
+/* 修复可能导致内容不显示的CSS */
+.json-property,
+.json-array-item {
+  padding: 0;
+  position: relative;
+}
+
+/* 请求参数样式 */
+.request-params {
+  margin-top: 8px;
+}
+
+.params-container {
+  margin-left: 8px;
+  margin-top: 4px;
+  padding-left: 8px;
+  border-left: 2px solid #eee;
+}
+
+.param-name {
+  color: #0451a5;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.param-value {
+  color: #098658;
+}
+
+/* 优化JSON元素垂直对齐 */
+.json-container * {
+  vertical-align: top;
+}
+
+/* 改进缩进的风格 */
+.json-footer {
+  margin-top: 0;
+}
+
+/* JSON Formatter 样式 */
+.jf-container {
+  position: relative;
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+    Liberation Mono, monospace;
+  font-size: 13px;
+  white-space: nowrap;
+  padding-left: 0;
+}
+
+.jf-toggler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.jf-toggler::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 3px;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-left-color: #555;
+}
+
+.jf-toggler.jf-open::before {
+  top: 7px;
+  left: 0;
+  border-color: transparent;
+  border-top-color: #555;
+}
+
+.jf-content {
+  margin-left: 15px;
+}
+
+.jf-child-container {
+  margin-left: 1.25em;
+  position: relative;
+  border-left: 1px dashed rgba(0, 0, 0, 0.1);
+  padding-left: 0.25em;
+}
+
+.jf-row {
+  padding: 0.2em 0;
+  position: relative;
+  line-height: 1.4;
+}
+
+.jf-key {
+  color: #0451a5;
+  font-weight: bold;
+}
+
+.jf-string {
+  color: #a31515;
+}
+
+.jf-number {
+  color: #098658;
+}
+
+.jf-boolean {
+  color: #0000ff;
+}
+
+.jf-null,
+.jf-undefined {
+  color: #800080;
+}
+
+.jf-date {
+  color: #0000ff;
+}
+
+.jf-empty {
+  color: #000;
+  font-weight: normal;
+}
+
+.jf-link {
+  color: #0000ff;
+  text-decoration: underline;
+}
+
+.jf-bracket {
+  color: #000;
+  font-weight: bold;
+}
+
+.jf-comma {
+  color: #000;
+  margin-right: 0;
+  display: inline;
+}
+
+.jf-row .jf-container.jf-child {
+  margin-left: 0;
+}
+
+/* 增强请求参数显示样式 */
+.request-params {
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #f3f6f9;
+  border-radius: 4px;
+  border-left: 3px solid #2196f3;
+}
+
+.params-container {
+  margin-top: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.param-name {
+  color: #0451a5;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.param-value {
+  color: #098658;
+  word-break: break-all;
+}
+
+.no-params {
+  color: #757575;
+  font-style: italic;
+  padding: 4px 0;
+}
+
+.jf-theme-default .jf-child-container {
+  border-left-color: #c1c1c1;
+}
+
+/* 添加请求方法样式 */
+.request-method {
+  color: #555;
+  background-color: #eee;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+/* 请求信息区域 */
+.request-info {
+  padding: 8px 12px;
+  background-color: #f9f9f9;
+  border-top: 1px dashed #ddd;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.param-section {
+  margin-bottom: 10px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.param-section-title {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #eee;
+}
+
+.param-list {
+  padding-left: 8px;
+}
+
+.param-item {
+  margin: 4px 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.param-name {
+  color: #0451a5;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.param-value {
+  color: #098658;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.no-params {
+  color: #757575;
+  font-style: italic;
+  padding: 4px 0;
+}
+
+/* 过滤相关的样式 */
+.filter-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-width: 120px;
+}
+
+#filter-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding-right: 28px; /* 为清除按钮留出空间 */
+  min-width: 0; /* 修复flex布局下可能出现的最小宽度问题 */
+}
+
+#filter-input:focus {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+#filter-clear-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  padding: 0;
+  width: 28px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#filter-clear-btn:hover {
+  color: #666;
+}
+
+.no-filter-results {
+  padding: 10px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin: 10px;
+}
+
+/* 当过滤有结果时，高亮显示匹配内容 */
+.filter-highlight {
+  background-color: #fff59d;
+  padding: 0 2px;
+  border-radius: 2px;
+}
